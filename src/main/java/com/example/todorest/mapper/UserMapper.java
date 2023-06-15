@@ -1,9 +1,7 @@
 package com.example.todorest.mapper;
 
-import com.example.todorest.dto.CreateCategoryResponseDto;
 import com.example.todorest.dto.CreateUserRequestDto;
 import com.example.todorest.dto.UserDto;
-import com.example.todorest.entity.Category;
 import com.example.todorest.entity.User;
 import org.mapstruct.Mapper;
 

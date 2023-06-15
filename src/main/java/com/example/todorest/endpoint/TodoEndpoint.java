@@ -9,6 +9,8 @@ import com.example.todorest.mapper.TodoMapper;
 import com.example.todorest.repository.CategoryRepository;
 import com.example.todorest.repository.TodoRepository;
 import com.example.todorest.repository.UserRepository;
+import com.example.todorest.service.CategoryService;
+import com.example.todorest.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +25,14 @@ import java.util.List;
 @RestController
 public class TodoEndpoint {
     private final TodoRepository todoRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final TodoMapper todoMapper;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     @PostMapping()
     public ResponseEntity<TodoDto> createTodo(@RequestBody CreateTodoRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.getUserByEmail(userDetails.getUsername());
-        Category category = categoryRepository.getCategoryById(requestDto.getCategory());
+        User user = userService.getUserByEmail(userDetails.getUsername());
+        Category category = categoryService.getCategoryById(requestDto.getCategory());
         Todo todo = new Todo();
         todo.setTitle(requestDto.getTitle());
         todo.setStatus(Status.NOT_STARTED);
@@ -45,7 +47,7 @@ public class TodoEndpoint {
     @PutMapping("/{id}")
     public ResponseEntity<TodoDto> updateTodoStatus(@PathVariable("id") int id, @RequestParam("status") Status status, @AuthenticationPrincipal UserDetails userDetails) {
         Todo todo = todoRepository.getById(id);
-        User user = userRepository.getUserByEmail(userDetails.getUsername());
+        User user = userService.getUserByEmail(userDetails.getUsername());
 
         if (todo == null || !todo.getUser().equals(user)) {
             return ResponseEntity.notFound().build();
@@ -61,7 +63,7 @@ public class TodoEndpoint {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTodo(@PathVariable("id") int id, @AuthenticationPrincipal UserDetails userDetails) {
         Todo todo = todoRepository.getById(id);
-        User user = userRepository.getUserByEmail(userDetails.getUsername());
+        User user = userService.getUserByEmail(userDetails.getUsername());
 
         if (todo == null || !todo.getUser().equals(user)) {
             return ResponseEntity.notFound().build();
@@ -85,7 +87,7 @@ public class TodoEndpoint {
     }
     @GetMapping("/byStatus")
     public ResponseEntity<List<TodoDto>> getTodosByStatus(@RequestParam("status") Status status, @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.getUserByEmail(userDetails.getUsername());
+        User user = userService.getUserByEmail(userDetails.getUsername());
         List<Todo> todos = todoRepository.getTodosByStatusAndUser(status, user);
 
         if (todos.isEmpty()) {

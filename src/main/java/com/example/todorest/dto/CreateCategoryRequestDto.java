@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateCategoryRequestDto {
     private int id;
+    private String name;
 }

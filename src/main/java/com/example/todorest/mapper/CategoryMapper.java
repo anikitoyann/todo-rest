@@ -8,7 +8,6 @@ import org.mapstruct.Mapper;
 
 //@Mapping(source = "name" ,target = "fullName")
 @Mapper(componentModel = "spring")
-
 public interface CategoryMapper {
     Category map(CreateCategoryRequestDto dto);
 
